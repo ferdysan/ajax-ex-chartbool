@@ -109,6 +109,41 @@ $(document).ready(function(){
 
   // FINE CHIAMATA GET
 
+  // EFFETTUO UNA CHIAMATA POST A SALES PER IMPOSTARE NUOVI valori
+
+  $('#invia').click(function(){
+
+    var venditore = $('.venditori').val();
+    var mese = $('.mesi').val();
+    var data_moment = moment(mese,'MM');
+    var mese_vendita= data_moment.locale('it').format('MM');
+
+    var importo= $('#valore_vendita').val();
+
+    $.ajax({
+      'url' :url_base,
+      'method': 'POST',
+      // gli passo il testo scritto in input dall'utente
+      'data':{
+       'salesman': venditore,
+       'amount':importo,
+       'date': mese_vendita
+      },
+      'success': function(data){
+
+
+      },
+      'error': function(){
+        alert('qualcosa è andato storto')
+      }
+    });
+
+  });
+
+
+
+
+// FUNZIONE CHE MI DISEGNA LE SELECT
   function disegna_select(dati_ingresso, mesi){
     // salvo i venditori che trovo in un array
     var venditori =[];
@@ -168,7 +203,7 @@ $(document).ready(function(){
 
   // FUNZIONE CHE MI DISEGNA IL GRAFICO DI VENDITE ANNUALI
 
-function disegna_grafico_vendite_annuali(mesi , importi){
+  function disegna_grafico_vendite_annuali(mesi , importi){
 
   var primo_chart =$('#grafico_1');
   var chart = new Chart(primo_chart, {
