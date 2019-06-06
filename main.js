@@ -12,6 +12,8 @@ $(document).ready(function(){
 
       // GRAFICO1 PER LE VENDITE PER LE VENDITE ANNUALI
 
+
+
       //so che dovrò avere delle label con tutti i mese_vendita
       var mesi={
         'gennaio':0,
@@ -27,6 +29,9 @@ $(document).ready(function(){
         'novembre':0,
         'dicembre':0
       };
+
+      // richiamo la funzione che mi popola le select
+      disegna_select(response, mesi);
 
       // ciclo i risultati della risposta
       for (var i = 0; i < response.length; i++) {
@@ -101,6 +106,33 @@ $(document).ready(function(){
     }
 
   });
+
+  // FINE CHIAMATA GET
+
+  function disegna_select(dati_ingresso, mesi){
+    // salvo i venditori che trovo in un array
+    var venditori =[];
+   // mi etraggo le chiavi dall'oggetto mesi così da avere i mesi e salvarli nelle select
+    var mese_correnti = Object.keys(mesi);
+
+   // tramite un ciclo mi salvo i venditori in un array che userò per popolare la mia select
+    for (var i = 0; i < dati_ingresso.length; i++) {
+      var venditore = dati_ingresso[i].salesman;
+      if(!venditori.includes(venditore)){
+        venditori.push(venditore);
+      }
+    }
+    for (var i = 0; i < venditori.length; i++) {
+      $('.venditori').append("<option>"+venditori[i]+"</option>");
+    }
+
+      var mese_correnti = Object.keys(mesi);
+      for (var i = 0; i < mese_correnti.length; i++) {
+        $('.mesi').append("<option>"+mese_correnti[i]+"</option>");
+      }
+
+
+  }
 
 
   function disegna_grafico_vendite_venditore(label, data){

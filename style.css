@@ -5,10 +5,11 @@
 }
 
 .container{
-  width: 100vw;
+  width: 80vw;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+
 }
 
 .grafico{
