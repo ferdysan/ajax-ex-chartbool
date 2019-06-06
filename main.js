@@ -52,8 +52,48 @@ $(document).ready(function(){
       // quindi ora con i miei dati preparati vado a passarli alla mia funzione
       disegna_grafico_vendite_annuali(label_mesi , dati_mesi);
 
-      console.log(label_mesi);
-      console.log(dati_mesi);
+      // GRAFICO 2 VENDITE PER VENDITORE
+      var vendite ={};
+      var totale_vendite=0;
+
+      // ciclo i risultati e creo un oggetto con chiavi = a venditore e ovalore = venduto
+
+      for (var i = 0; i < response.length; i++) {
+        // prenso l'elemento attuale del mio array
+        var vendita = response[i];
+        // recupero le vendite e il venditore corrente
+        var venditore = vendita.salesman;
+        var importo = vendita.amount;
+        // recupero le chiavi inserite in vendite
+        var venditori_inseriti = Object.keys(vendite);
+
+
+        // controllo se la chiave è stata aggiunta
+        if(!venditori_inseriti.includes(venditore)){
+          vendite[venditore]=importo;
+        }else{
+          vendite[venditore] += importo;
+        }
+        totale_vendite+=importo;
+      }
+
+      // imposto un controllo per vedere se vendite è maggiore di 0
+      if(totale_vendite > 0){
+        // questo ciclo mi serve per creare le percentuali
+        for (var venditore in vendite) {
+           var totale_vendite_venditore = vendite[venditore];
+           var percentuale_vendite_venditore = totale_vendite_venditore *100 / totale_vendite;
+           vendite[venditore]=percentuale_vendite_venditore.toFixed(1);
+        }
+        // recuper dal mio oggetto vendite prima le chiavi e poi i valori delle chiavi e me li salvo in una variabile così da poter passare questi dati alla funzione che mi disegnerà il
+        // grafico
+        var label_venditori = Object.keys(vendite);
+        var dati_vendite_per_venditore = Object.values(vendite);
+
+        //ora chiamo la funzione che mi disegna il grafico 2
+        disegna_grafico_vendite_venditore(label_venditori, dati_vendite_per_venditore);
+      }
+
 
     },
     'error':function(){
@@ -61,6 +101,40 @@ $(document).ready(function(){
     }
 
   });
+
+
+  function disegna_grafico_vendite_venditore(label, data){
+
+    var primo_pie_chart =$('#grafico_2');
+    var myChart = new Chart(primo_pie_chart, {
+        type: 'pie',
+        data: {
+          'datasets':[{
+            'data': data,
+            'backgroundColor':['red','yellow','blue','green']
+          }],
+          'labels': label
+        },
+        'options':{
+          'title':{
+            'display': true,
+            'text': 'Vendite per venditore nel 2017',
+          },
+          'tooltips':{
+            'callbacks':{
+              'afterLabel':function(tooltipItem, data){
+                var dataset = data['datasets'][0];
+                return
+              }
+            }
+          }
+        }
+
+    });
+
+  }
+
+  // FUNZIONE CHE MI DISEGNA IL GRAFICO DI VENDITE ANNUALI
 
 function disegna_grafico_vendite_annuali(mesi , importi){
 
